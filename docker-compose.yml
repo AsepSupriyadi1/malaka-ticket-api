@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  case_study_db:
+    image: mysql:8.0
+    container_name: case_study_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3306:3306"
+    networks:
+      - malaka-net
+
+  case_study_api:
+    build: .
+    container_name: case_study_api
+    depends_on:
+      - case_study_db
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      DB_HOST: ${DB_HOST}
+    networks:
+      - malaka-net
+
+networks:
+  malaka-net:
+    driver: bridge
